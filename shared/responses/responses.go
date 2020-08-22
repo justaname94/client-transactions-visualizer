@@ -18,8 +18,8 @@ func (e *ErrorResponse) Render(w http.ResponseWriter, r *http.Request) error {
 	return nil
 }
 
-// NewErrorResponse returns an initializer ErrorResponse with given error
-func NewErrorResponse(statusCode int, err error) render.Renderer {
+// NewErrResponse returns an initializer ErrorResponse with given error
+func NewErrResponse(statusCode int, err error) render.Renderer {
 	return &ErrorResponse{
 		HTTPStatusCode: statusCode,
 		Message:        err.Error(),
