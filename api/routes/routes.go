@@ -8,7 +8,6 @@ import (
 	"github.com/go-chi/render"
 
 	"github.com/go-chi/chi"
-	// "transactions/shared/responses"
 )
 
 // TransactionRs provides a collection of resources for the transactions API.
@@ -38,6 +37,13 @@ func (rs TransactionRs) loadData(w http.ResponseWriter, r *http.Request) {
 	}
 
 	date, err := time.Parse(dateFormat, dateParam)
+
+	if err != nil {
+		render.Render(w, r, responses.NewErrResponse(400, err))
+		return
+	}
+
+	// buyers, err := handlers.LoadBuyers(date)
 
 	if err != nil {
 		render.Render(w, r, responses.NewErrResponse(400, err))

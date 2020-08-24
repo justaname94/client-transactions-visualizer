@@ -12,8 +12,8 @@ type Buyer struct {
 	Age  int    `json:"age"`
 }
 
-// NewClient returns a client structure with the given values
-func NewClient(id, name string, age int) (*Buyer, error) {
+// NewBuyer returns a client structure with the given values
+func NewBuyer(id, name string, age int) (*Buyer, error) {
 	if id == "" {
 		return nil, utils.ErrMissingField("id")
 	}
