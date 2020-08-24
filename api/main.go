@@ -10,6 +10,7 @@ import (
 	"github.com/go-chi/chi/middleware"
 	"github.com/go-chi/cors"
 	"github.com/go-chi/render"
+	"github.com/joho/godotenv"
 )
 
 var port = flag.String("port", "8080",
@@ -17,6 +18,12 @@ var port = flag.String("port", "8080",
 
 func main() {
 	flag.Parse()
+
+	err := godotenv.Load("../.env")
+
+	if err != nil {
+		log.Fatal(err)
+	}
 
 	router := chi.NewRouter()
 
