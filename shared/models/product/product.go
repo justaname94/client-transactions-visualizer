@@ -13,7 +13,7 @@ type Product struct {
 }
 
 // NewClient returns a client structure with the given values
-func NewClient(id, name string, price int) (*Product, error) {
+func NewProduct(id, name string, price int) (*Product, error) {
 	if id == "" {
 		return nil, utils.ErrMissingField("id")
 	}

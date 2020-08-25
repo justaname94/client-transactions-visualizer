@@ -1,14 +1,18 @@
 package handlers
 
 import (
+	"encoding/csv"
 	"encoding/json"
 	"errors"
 	"fmt"
+	"io"
 	"log"
 	"net/http"
 	"os"
+	"strconv"
 	"time"
-	models "transactions/shared/models/buyer"
+	buyer "transactions/shared/models/buyer"
+	product "transactions/shared/models/product"
 )
 
 var (
@@ -24,7 +28,7 @@ func getURL(endpoint string, unixTime int64) (string, error) {
 }
 
 // LoadBuyers TODO
-func LoadBuyers(date time.Time) ([]*models.Buyer, error) {
+func LoadBuyers(date time.Time) ([]*buyer.Buyer, error) {
 	url, _ := getURL("buyers", date.Unix())
 
 	req, err := http.NewRequest(http.MethodGet, url, nil)
@@ -39,20 +43,21 @@ func LoadBuyers(date time.Time) ([]*models.Buyer, error) {
 
 	var buyersInterface interface{}
 
+	defer res.Body.Close()
 	if err := json.NewDecoder(res.Body).Decode(&buyersInterface); err != nil {
 		return nil, err
 	}
 
-	var buyers []*models.Buyer
+	var buyers []*buyer.Buyer
 
 	switch v := buyersInterface.(type) {
 	case []interface{}:
-		for _, buyer := range v {
-			id := buyer.(map[string]interface{})["id"].(string)
-			name := buyer.(map[string]interface{})["name"].(string)
-			age := int(buyer.(map[string]interface{})["age"].(float64))
+		for _, data := range v {
+			id := data.(map[string]interface{})["id"].(string)
+			name := data.(map[string]interface{})["name"].(string)
+			age := int(data.(map[string]interface{})["age"].(float64))
 
-			newBuyer, err := models.NewBuyer(id, name, age)
+			newBuyer, err := buyer.NewBuyer(id, name, age)
 			if err != nil {
 				// Log and ignore incomplete buyers
 				log.Println(err)
@@ -64,4 +69,56 @@ func LoadBuyers(date time.Time) ([]*models.Buyer, error) {
 	}
 
 	return buyers, nil
+}
+
+// LoadProducts TODO
+func LoadProducts(date time.Time) ([]*product.Product, error) {
+	url, _ := getURL("products", date.Unix())
+
+	req, err := http.NewRequest(http.MethodGet, url, nil)
+	if err != nil {
+		return nil, err
+	}
+
+	res, err := client.Do(req)
+	if err != nil {
+		return nil, err
+	}
+
+	defer res.Body.Close()
+	reader := csv.NewReader(res.Body)
+	reader.Comma = '\''
+
+	if err != nil {
+		return nil, err
+	}
+
+	var products []*product.Product
+
+	for {
+		record, err := reader.Read()
+		if err == io.EOF {
+			break
+		}
+		if err != nil {
+			// Log error and ignore product record
+			log.Println(err)
+		}
+
+		id := string(record[0])
+		name := string(record[1])
+
+		price, _ := strconv.Atoi(record[2])
+
+		product, err := product.NewProduct(id, name, price)
+
+		if err != nil {
+			// Log error and ignore product record
+			log.Println(err)
+		}
+
+		products = append(products, product)
+	}
+
+	return products, nil
 }

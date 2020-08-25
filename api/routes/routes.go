@@ -45,6 +45,8 @@ func (rs TransactionRs) loadData(w http.ResponseWriter, r *http.Request) {
 
 	// buyers, err := handlers.LoadBuyers(date)
 
+	// products, err := handlers.LoadProducts(date)
+
 	if err != nil {
 		render.Render(w, r, responses.NewErrResponse(400, err))
 		return
