@@ -14,8 +14,8 @@ type Transaction struct {
 	ProductIDs []string `json:"productIDs"`
 }
 
-// NewClient returns a client structure with the given values
-func NewClient(id, buyerID, ip, device string,
+// NewTransaction returns a transaction structure with the given values
+func NewTransaction(id, buyerID, ip, device string,
 	productIds []string) (*Transaction, error) {
 
 	if id == "" {
