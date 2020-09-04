@@ -5,13 +5,17 @@ import (
 	"time"
 	"transactions/shared/responses"
 
+	"github.com/dgraph-io/dgo"
+
 	"github.com/go-chi/render"
 
 	"github.com/go-chi/chi"
 )
 
 // TransactionRs provides a collection of resources for the transactions API.
-type TransactionRs struct{}
+type TransactionRs struct {
+	Db *dgo.Dgraph
+}
 
 type emptyResponse struct{}
 

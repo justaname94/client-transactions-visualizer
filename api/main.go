@@ -2,9 +2,11 @@ package main
 
 import (
 	"flag"
+	"fmt"
 	"log"
 	"net/http"
 	"transactions/api/routes"
+	"transactions/storage"
 
 	"github.com/go-chi/chi"
 	"github.com/go-chi/chi/middleware"
@@ -13,7 +15,7 @@ import (
 	"github.com/joho/godotenv"
 )
 
-var port = flag.String("port", "8080",
+var port = flag.String("port", "8010",
 	"Port in which the server is going to run")
 
 func main() {
@@ -41,7 +43,11 @@ func main() {
 		cors.Handler,
 	)
 
-	router.Mount("/", routes.TransactionRs{}.Routes())
+	client, closeFn := storage.Connect()
+	defer closeFn()
 
+	router.Mount("/", routes.TransactionRs{Db: client}.Routes())
+
+	fmt.Printf("Listening on port %s\n", *port)
 	log.Fatal(http.ListenAndServe(":"+*port, router))
 }
