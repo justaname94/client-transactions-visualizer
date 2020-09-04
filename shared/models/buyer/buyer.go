@@ -7,9 +7,9 @@ import (
 
 // Buyer is the struct type for a buyer
 type Buyer struct {
-	ID   string `json:"id"`
-	Name string `json:"name"`
-	Age  int    `json:"age"`
+	ID   string `json:"id,omitempty"`
+	Name string `json:"name,omitempty"`
+	Age  int    `json:"age,omitempty"`
 }
 
 // NewBuyer returns a client structure with the given values

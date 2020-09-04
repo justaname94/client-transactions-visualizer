@@ -5,8 +5,7 @@ import (
 	"time"
 	"transactions/shared/responses"
 
-	"github.com/dgraph-io/dgo"
-
+	"github.com/dgraph-io/dgo/v2"
 	"github.com/go-chi/render"
 
 	"github.com/go-chi/chi"

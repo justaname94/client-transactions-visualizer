@@ -7,12 +7,12 @@ import (
 
 // Product is the struct type for a product
 type Product struct {
-	ID    string `json:"id"`
-	Name  string `json:"name"`
-	Price int    `json:"price"`
+	ID    string `json:"id,omitempty"`
+	Name  string `json:"name,omitempty"`
+	Price int    `json:"price,omitempty"`
 }
 
-// NewClient returns a client structure with the given values
+// NewProduct returns a product structure with the given values
 func NewProduct(id, name string, price int) (*Product, error) {
 	if id == "" {
 		return nil, utils.ErrMissingField("id")

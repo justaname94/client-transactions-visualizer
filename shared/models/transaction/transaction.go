@@ -7,11 +7,11 @@ import (
 // Transaction is the struct type for a transaction. A transaction is defined
 // as a serie of product purchase at a moment by a Buyer.
 type Transaction struct {
-	ID         string   `json:"id"`
-	BuyerID    string   `json:"buyerID"`
-	IP         string   `json:"ip"`
-	Device     string   `json:"device"`
-	ProductIDs []string `json:"productIDs"`
+	ID         string   `json:"id,,omitempty"`
+	BuyerID    string   `json:"buyerID,omitempty"`
+	IP         string   `json:"ip,,omitempty"`
+	Device     string   `json:"device,omitempty"`
+	ProductIDs []string `json:"productIDs,omitempty"`
 }
 
 // NewTransaction returns a transaction structure with the given values
