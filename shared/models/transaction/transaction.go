@@ -12,6 +12,7 @@ type Transaction struct {
 	IP         string   `json:"ip,,omitempty"`
 	Device     string   `json:"device,omitempty"`
 	ProductIDs []string `json:"productIDs,omitempty"`
+	DType      []string `json:"dgraph.type,omitempty"`
 }
 
 // NewTransaction returns a transaction structure with the given values
@@ -40,5 +41,6 @@ func NewTransaction(id, buyerID, ip, device string,
 		IP:         ip,
 		Device:     device,
 		ProductIDs: productIds,
+		DType:      []string{"Transaction"},
 	}, nil
 }

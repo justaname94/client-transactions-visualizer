@@ -1,9 +1,13 @@
 package routes
 
 import (
+	"encoding/json"
+	"log"
 	"net/http"
 	"time"
+	"transactions/api/handlers"
 	"transactions/shared/responses"
+	"transactions/storage"
 
 	"github.com/dgraph-io/dgo/v2"
 	"github.com/go-chi/render"
@@ -17,6 +21,10 @@ type TransactionRs struct {
 }
 
 type emptyResponse struct{}
+
+type dateType struct {
+	Date string `json:"date,omitempty"`
+}
 
 const dateFormat = "2006-01-02"
 
@@ -32,7 +40,7 @@ func (rs TransactionRs) Routes() chi.Router {
 	return router
 }
 
-func (rs TransactionRs) loadData(w http.ResponseWriter, r *http.Request) {
+func (rs *TransactionRs) loadData(w http.ResponseWriter, r *http.Request) {
 	dateParam := chi.URLParam(r, "date")
 
 	if dateParam == "" {
@@ -46,20 +54,55 @@ func (rs TransactionRs) loadData(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	// buyers, err := handlers.LoadBuyers(date)
+	buyers, err := handlers.LoadBuyers(date)
 
-	// products, err := handlers.LoadProducts(date)
+	buyersJSON, err := json.Marshal(buyers)
 
-	// transactions, err := handlers.LoadTransactions(date)
+	if err != nil {
+		log.Println(err)
+	}
+	if err := storage.Save(rs.Db, buyersJSON); err != nil {
+		log.Println(err)
+	}
+
+	products, err := handlers.LoadProducts(date)
+
+	productsJSON, err := json.Marshal(products)
+
+	if err != nil {
+		log.Println(err)
+	}
+	if err := storage.Save(rs.Db, productsJSON); err != nil {
+		log.Println(err)
+	}
+
+	transactions, err := handlers.LoadTransactions(date)
+
+	transactionsJSON, err := json.Marshal(transactions)
+
+	if err != nil {
+		log.Println(err)
+	}
+	if err := storage.Save(rs.Db, transactionsJSON); err != nil {
+		log.Println(err)
+	}
 
 	if err != nil {
 		render.Render(w, r, responses.NewErrResponse(400, err))
 		return
 	}
 
-	render.JSON(w, r, map[string]interface{}{
-		"date": date,
-	})
+	// Save date so can't be loaded twice
+	dateJSON, err := json.Marshal(dateType{Date: dateParam})
+	if err != nil {
+		render.Render(w, r, responses.NewErrResponse(400, err))
+	}
+
+	if err := storage.Save(rs.Db, dateJSON); err != nil {
+		log.Println(err)
+	}
+
+	render.JSON(w, r, dateJSON)
 }
 
 func (rs TransactionRs) getCustomers(w http.ResponseWriter, r *http.Request) {

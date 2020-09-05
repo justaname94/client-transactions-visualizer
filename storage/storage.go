@@ -1,6 +1,7 @@
 package storage
 
 import (
+	"context"
 	"log"
 	"os"
 
@@ -28,4 +29,21 @@ func Connect() (*dgo.Dgraph, CancelFunc) {
 			log.Printf("Error while closing connection: %v", err)
 		}
 	}
+}
+
+// Save saves a marshed valid JSON into the database
+func Save(client *dgo.Dgraph, element []byte) error {
+	ctx := context.Background()
+
+	mutation := &api.Mutation{
+		CommitNow: true,
+		SetJson:   element,
+	}
+
+	_, err := client.NewTxn().Mutate(ctx, mutation)
+	if err != nil {
+		return err
+	}
+
+	return nil
 }

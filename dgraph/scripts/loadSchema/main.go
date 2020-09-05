@@ -45,7 +45,8 @@ func loadSchema(client *dgo.Dgraph) {
 		buyerID:    string               .
 		ip:         string               .
 		device:     string               .
-		productIDs: string               .
+		productIDs: [string]             .
+		date:        string               .
 
 		type Buyer {
 			id:   string

@@ -7,9 +7,10 @@ import (
 
 // Product is the struct type for a product
 type Product struct {
-	ID    string `json:"id,omitempty"`
-	Name  string `json:"name,omitempty"`
-	Price int    `json:"price,omitempty"`
+	ID    string   `json:"id,omitempty"`
+	Name  string   `json:"name,omitempty"`
+	Price int      `json:"price,omitempty"`
+	DType []string `json:"dgraph.type,omitempty"`
 }
 
 // NewProduct returns a product structure with the given values
@@ -30,5 +31,6 @@ func NewProduct(id, name string, price int) (*Product, error) {
 		ID:    id,
 		Name:  name,
 		Price: price,
+		DType: []string{"Product"},
 	}, nil
 }
