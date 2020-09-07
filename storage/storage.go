@@ -1,7 +1,9 @@
 package storage
 
 import (
+	"bytes"
 	"context"
+	"fmt"
 	"log"
 	"os"
 
@@ -42,6 +44,51 @@ func Save(client *dgo.Dgraph, element []byte) error {
 
 	_, err := client.NewTxn().Mutate(ctx, mutation)
 	if err != nil {
+		return err
+	}
+
+	return nil
+}
+
+// BulkConnect takes an array of string and fields to make a bulk upsert
+// (query + mutation) on a series of fields to connect related edges
+// using the supplied fields with the edge name
+func BulkConnect(client *dgo.Dgraph, field1, field2, edge string,
+	values []string) error {
+	ctx := context.Background()
+
+	var query bytes.Buffer
+
+	query.WriteString("query {")
+
+	var mutations []*api.Mutation
+
+	for idx, val := range values {
+
+		// The field names are placeholder names for the query, they bear no
+		// effect on the query itset
+		q := fmt.Sprintf(`
+			field_1_%d as var(func: eq(%s, "%s"))
+			field_2_%d as var(func: eq(%s, "%s"))
+		`, idx, field1, val, idx, field2, val)
+
+		query.WriteString(q)
+
+		mu := &api.Mutation{
+			SetNquads: []byte(fmt.Sprintf(`uid(field_1_%d) <%s> uid(field_2_%d) .`,
+				idx, edge, idx)),
+		}
+
+		mutations = append(mutations, mu)
+	}
+
+	req := &api.Request{
+		Query:     query.String(),
+		Mutations: mutations,
+		CommitNow: true,
+	}
+
+	if _, err := client.NewTxn().Do(ctx, req); err != nil {
 		return err
 	}
 

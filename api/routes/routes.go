@@ -92,6 +92,28 @@ func (rs *TransactionRs) loadData(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	var buyerArr []string
+
+	for _, buyer := range buyers {
+		buyerArr = append(buyerArr, buyer.ID)
+	}
+
+	if err := storage.BulkConnect(rs.Db, "id", "buyerID", "transaction",
+		buyerArr); err != nil {
+		render.Render(w, r, responses.NewErrResponse(400, err))
+	}
+
+	var productArr []string
+
+	for _, product := range products {
+		productArr = append(productArr, product.ID)
+	}
+
+	if err := storage.BulkConnect(rs.Db, "productIDs", "id", "product",
+		productArr); err != nil {
+		render.Render(w, r, responses.NewErrResponse(400, err))
+	}
+
 	// Save date so can't be loaded twice
 	dateJSON, err := json.Marshal(dateType{Date: dateParam})
 	if err != nil {
