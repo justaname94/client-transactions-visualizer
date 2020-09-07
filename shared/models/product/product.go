@@ -2,7 +2,7 @@ package models
 
 import (
 	"errors"
-	"transactions/shared/utils"
+	messages "transactions/shared/error-messages"
 )
 
 // Product is the struct type for a product
@@ -16,11 +16,11 @@ type Product struct {
 // NewProduct returns a product structure with the given values
 func NewProduct(id, name string, price int) (*Product, error) {
 	if id == "" {
-		return nil, utils.ErrMissingField("id")
+		return nil, messages.ErrMissingField("id")
 	}
 
 	if name == "" {
-		return nil, utils.ErrMissingField("name")
+		return nil, messages.ErrMissingField("name")
 	}
 
 	if price <= 0 {

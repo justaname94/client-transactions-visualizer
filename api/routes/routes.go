@@ -54,21 +54,22 @@ func (rs *TransactionRs) loadData(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	buyers, err := handlers.LoadBuyers(date)
+	data, err := handlers.Load(date)
 
-	buyersJSON, err := json.Marshal(buyers)
+	if err != nil {
+		render.Render(w, r, responses.NewErrResponse(500, err))
+	}
 
+	buyersJSON, err := json.Marshal(data.Buyers)
 	if err != nil {
 		log.Println(err)
 	}
+
 	if err := storage.Save(rs.Db, buyersJSON); err != nil {
 		log.Println(err)
 	}
 
-	products, err := handlers.LoadProducts(date)
-
-	productsJSON, err := json.Marshal(products)
-
+	productsJSON, err := json.Marshal(data.Products)
 	if err != nil {
 		log.Println(err)
 	}
@@ -76,10 +77,7 @@ func (rs *TransactionRs) loadData(w http.ResponseWriter, r *http.Request) {
 		log.Println(err)
 	}
 
-	transactions, err := handlers.LoadTransactions(date)
-
-	transactionsJSON, err := json.Marshal(transactions)
-
+	transactionsJSON, err := json.Marshal(data.Transactions)
 	if err != nil {
 		log.Println(err)
 	}
@@ -94,7 +92,7 @@ func (rs *TransactionRs) loadData(w http.ResponseWriter, r *http.Request) {
 
 	var buyerArr []string
 
-	for _, buyer := range buyers {
+	for _, buyer := range data.Buyers {
 		buyerArr = append(buyerArr, buyer.ID)
 	}
 
@@ -105,7 +103,7 @@ func (rs *TransactionRs) loadData(w http.ResponseWriter, r *http.Request) {
 
 	var productArr []string
 
-	for _, product := range products {
+	for _, product := range data.Products {
 		productArr = append(productArr, product.ID)
 	}
 

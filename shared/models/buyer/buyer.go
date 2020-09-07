@@ -2,7 +2,7 @@ package models
 
 import (
 	"errors"
-	"transactions/shared/utils"
+	messages "transactions/shared/error-messages"
 )
 
 // Buyer is the struct type for a buyer
@@ -16,11 +16,11 @@ type Buyer struct {
 // NewBuyer returns a client structure with the given values
 func NewBuyer(id, name string, age int) (*Buyer, error) {
 	if id == "" {
-		return nil, utils.ErrMissingField("id")
+		return nil, messages.ErrMissingField("id")
 	}
 
 	if name == "" {
-		return nil, utils.ErrMissingField("name")
+		return nil, messages.ErrMissingField("name")
 	}
 
 	if age <= 0 {
