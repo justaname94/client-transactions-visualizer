@@ -8,6 +8,7 @@ import (
 	"transactions/api/handlers"
 	"transactions/shared/responses"
 	"transactions/storage"
+	"transactions/storage/helpers"
 
 	"github.com/dgraph-io/dgo/v2"
 	"github.com/go-chi/render"
@@ -58,58 +59,17 @@ func (rs *TransactionRs) loadData(w http.ResponseWriter, r *http.Request) {
 
 	if err != nil {
 		render.Render(w, r, responses.NewErrResponse(500, err))
-	}
-
-	buyersJSON, err := json.Marshal(data.Buyers)
-	if err != nil {
-		log.Println(err)
-	}
-
-	if err := storage.Save(rs.Db, buyersJSON); err != nil {
-		log.Println(err)
-	}
-
-	productsJSON, err := json.Marshal(data.Products)
-	if err != nil {
-		log.Println(err)
-	}
-	if err := storage.Save(rs.Db, productsJSON); err != nil {
-		log.Println(err)
-	}
-
-	transactionsJSON, err := json.Marshal(data.Transactions)
-	if err != nil {
-		log.Println(err)
-	}
-	if err := storage.Save(rs.Db, transactionsJSON); err != nil {
-		log.Println(err)
-	}
-
-	if err != nil {
-		render.Render(w, r, responses.NewErrResponse(400, err))
 		return
 	}
 
-	var buyerArr []string
-
-	for _, buyer := range data.Buyers {
-		buyerArr = append(buyerArr, buyer.ID)
+	if err := helpers.SaveEntities(rs.Db, data); err != nil {
+		render.Render(w, r, responses.NewErrResponse(500, err))
+		return
 	}
 
-	if err := storage.BulkConnect(rs.Db, "id", "buyerID", "transaction",
-		buyerArr); err != nil {
-		render.Render(w, r, responses.NewErrResponse(400, err))
-	}
-
-	var productArr []string
-
-	for _, product := range data.Products {
-		productArr = append(productArr, product.ID)
-	}
-
-	if err := storage.BulkConnect(rs.Db, "productIDs", "id", "product",
-		productArr); err != nil {
-		render.Render(w, r, responses.NewErrResponse(400, err))
+	if err := helpers.ConnectFields(rs.Db, data); err != nil {
+		render.Render(w, r, responses.NewErrResponse(500, err))
+		return
 	}
 
 	// Save date so can't be loaded twice
@@ -122,7 +82,9 @@ func (rs *TransactionRs) loadData(w http.ResponseWriter, r *http.Request) {
 		log.Println(err)
 	}
 
-	render.JSON(w, r, dateJSON)
+	render.JSON(w, r, map[string]string{
+		"success": "true",
+	})
 }
 
 func (rs TransactionRs) getCustomers(w http.ResponseWriter, r *http.Request) {

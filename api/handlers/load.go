@@ -15,6 +15,7 @@ import (
 	buyer "transactions/shared/models/buyer"
 	product "transactions/shared/models/product"
 	transaction "transactions/shared/models/transaction"
+	"transactions/shared/utils"
 )
 
 var (
@@ -22,13 +23,6 @@ var (
 		Timeout: time.Second * 2,
 	}
 )
-
-// Entities represents an array of the used models
-type Entities struct {
-	Buyers       []*buyer.Buyer
-	Products     []*product.Product
-	Transactions []*transaction.Transaction
-}
 
 // getURL formats an URL to retrieve information
 func getURL(endpoint string, unixTime int64) (string, error) {
@@ -39,23 +33,23 @@ func getURL(endpoint string, unixTime int64) (string, error) {
 
 // Load fetch and parses all the necessary data and return a struct
 // with all the data
-func Load(date time.Time) (Entities, error) {
+func Load(date time.Time) (utils.Entities, error) {
 	buyers, err := loadBuyers(date)
 	if err != nil {
-		return Entities{}, err
+		return utils.Entities{}, err
 	}
 
 	products, err := loadProducts(date)
 	if err != nil {
-		return Entities{}, err
+		return utils.Entities{}, err
 	}
 
 	transactions, err := loadTransactions(date)
 	if err != nil {
-		return Entities{}, err
+		return utils.Entities{}, err
 	}
 
-	return Entities{Buyers: buyers, Products: products, Transactions: transactions}, nil
+	return utils.Entities{Buyers: buyers, Products: products, Transactions: transactions}, nil
 }
 
 // loadBuyers fetch all the buyers data and loads it into memory
