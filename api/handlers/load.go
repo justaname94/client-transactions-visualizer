@@ -20,7 +20,7 @@ import (
 
 var (
 	client = http.Client{
-		Timeout: time.Second * 2,
+		Timeout: time.Second * 5,
 	}
 )
 

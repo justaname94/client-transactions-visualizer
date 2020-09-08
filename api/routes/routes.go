@@ -75,15 +75,15 @@ func (rs *TransactionRs) loadData(w http.ResponseWriter, r *http.Request) {
 	// Save date so can't be loaded twice
 	dateJSON, err := json.Marshal(dateType{Date: dateParam})
 	if err != nil {
-		render.Render(w, r, responses.NewErrResponse(400, err))
+		render.Render(w, r, responses.NewErrResponse(500, err))
 	}
 
 	if err := storage.Save(rs.Db, dateJSON); err != nil {
 		log.Println(err)
 	}
 
-	render.JSON(w, r, map[string]string{
-		"success": "true",
+	render.JSON(w, r, map[string]bool{
+		"success": true,
 	})
 }
 
