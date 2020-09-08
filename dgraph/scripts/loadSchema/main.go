@@ -38,17 +38,17 @@ func main() {
 func loadSchema(client *dgo.Dgraph) {
 	op := &api.Operation{
 		Schema: `
-		id:         string @index(exact)   .
-		name:       string                 .
-		age:        int                    .
-		price:      int                    .
-		buyerID:    string @index(exact)   .
-		ip:         string @index(exact)   .
-		device:     string                 .
-		productIDs: [string] @index(exact) .
-		date:       string @index(exact)   .
-		transaction: [uid] @reverse        .
-		product: [uid]     @reverse        .
+		id:          string   @index(exact) .
+		name:        string                 .
+		age:         int                    .
+		price:       int                    .
+		buyerID:     string   @index(exact) .
+		ip:          string   @index(exact) .
+		device:      string                 .
+		productIDs:  [string] @index(exact) .
+		date:        string   @index(exact) .
+		transaction: [uid]    @reverse      .
+		product:     [uid]    @reverse      .
 
 		type Buyer {
 			id:   string
