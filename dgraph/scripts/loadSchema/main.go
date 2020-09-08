@@ -47,6 +47,8 @@ func loadSchema(client *dgo.Dgraph) {
 		device:     string                 .
 		productIDs: [string] @index(exact) .
 		date:       string @index(exact)   .
+		transaction: [uid] @reverse        .
+		product: [uid]     @reverse        .
 
 		type Buyer {
 			id:   string

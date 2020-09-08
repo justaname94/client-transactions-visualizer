@@ -119,6 +119,7 @@ func loadProducts(date time.Time) ([]*product.Product, error) {
 	}
 
 	var products []*product.Product
+	exists := make(map[string]bool)
 
 	for {
 		record, err := reader.Read()
@@ -140,6 +141,13 @@ func loadProducts(date time.Time) ([]*product.Product, error) {
 		if err != nil {
 			// Log error and ignore product record
 			log.Println(err)
+		}
+
+		// Sometimes the parser outputs duplicates, check for them
+		if _, exist := exists[product.ID]; exist {
+			continue
+		} else {
+			exists[product.ID] = true
 		}
 
 		products = append(products, product)
