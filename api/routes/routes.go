@@ -90,7 +90,20 @@ func (rs *TransactionRs) loadData(w http.ResponseWriter, r *http.Request) {
 }
 
 func (rs TransactionRs) getCustomers(w http.ResponseWriter, r *http.Request) {
-	render.JSON(w, r, emptyResponse{})
+	buyers, err := storage.Query(rs.Db, storage.AllBuyers, map[string]string{})
+
+	if err != nil {
+		render.Render(w, r, responses.NewErrResponse(500, err))
+		return
+	}
+
+	var res map[string]*json.RawMessage
+	if err := json.Unmarshal(buyers.Json, &res); err != nil {
+		render.Render(w, r, responses.NewErrResponse(500, err))
+		return
+	}
+
+	render.JSON(w, r, res)
 }
 
 func (rs *TransactionRs) getCustomer(w http.ResponseWriter, r *http.Request) {

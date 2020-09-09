@@ -69,4 +69,15 @@ const (
 			price
 		}
 	}`
+
+	// AllBuyers return all the buyers on the database
+	AllBuyers = `
+		query AllBuyers{
+			buyers(func: type(Buyer)) {
+				id
+				name
+				age
+			}
+		}
+	`
 )
