@@ -94,3 +94,17 @@ func BulkConnect(client *dgo.Dgraph, field1, field2, edge string,
 
 	return nil
 }
+
+// Query perfoms a query to the database according to the parameters
+// supplied and returns a response from the db
+func Query(client *dgo.Dgraph, query string,
+	variables map[string]string) (*api.Response, error) {
+
+	ctx := context.Background()
+	res, err := client.NewTxn().QueryWithVars(ctx, query, variables)
+
+	if err != nil {
+		return &api.Response{}, nil
+	}
+	return res, nil
+}

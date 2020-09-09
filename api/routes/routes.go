@@ -6,8 +6,10 @@ import (
 	"net/http"
 	"time"
 	"transactions/api/handlers"
+	messages "transactions/shared/error-messages"
 	"transactions/shared/responses"
 	"transactions/storage"
+
 	"transactions/storage/helpers"
 
 	"github.com/dgraph-io/dgo/v2"
@@ -91,6 +93,29 @@ func (rs TransactionRs) getCustomers(w http.ResponseWriter, r *http.Request) {
 	render.JSON(w, r, emptyResponse{})
 }
 
-func (rs TransactionRs) getCustomer(w http.ResponseWriter, r *http.Request) {
-	render.JSON(w, r, emptyResponse{})
+func (rs *TransactionRs) getCustomer(w http.ResponseWriter, r *http.Request) {
+	id := chi.URLParam(r, "id")
+
+	info, err := storage.Query(rs.Db, storage.BuyerInfo, map[string]string{
+		"$id": id,
+	})
+	if err != nil {
+		render.Render(w, r, responses.NewErrResponse(500, err))
+		return
+	}
+
+	// Buyer was not found
+	if info.GetMetrics().GetNumUids()["_total"] == 0 {
+		render.Render(w, r, responses.NewErrResponse(404,
+			messages.ErrNotFound("buyer")))
+		return
+	}
+
+	var res map[string]*json.RawMessage
+	if err := json.Unmarshal(info.Json, &res); err != nil {
+		render.Render(w, r, responses.NewErrResponse(500, err))
+		return
+	}
+
+	render.JSON(w, r, res)
 }

@@ -1,0 +1,72 @@
+package storage
+
+const (
+	// BuyerInfo returns several informations related to a buyer on the database.
+	// The information returned can be summarized in overall user information,
+	// other buyers that used the same ip and a list of recommended products.
+	// The recommended products work by traversing the transactions of all the
+	// other buyers that bought the same products of the user and sorting them
+	// by amount.
+	// Ex: If the buyer bought pizza, then it will look at all the other
+	// transactions that contain pizza and will store what other things they
+	// bought (ex: soda), after that sorts them by amount and recommends which
+	// items where bought the most along with 'pizza' and all the other products
+	// in the buyer transactions. (and now I want pizza)
+	BuyerInfo = `query UserInfo($id: string) {
+		buyer(func: eq(id, $id)) {
+			name
+			age
+			id
+			
+			transaction {
+				id
+				device
+				ip as ip
+				product {
+					name
+					price as price
+				}
+				total : sum(val(price))
+			}
+		}
+			
+		relatedIpBuyers(func: eq(ip, val(ip)), first: 5) @filter(NOT uid(ip))  
+		@normalize {
+			ip : ip
+			~transaction  {
+				name: name
+				id:  id
+			}
+		}
+	
+		
+		 var(func: eq(id, $id))  {
+				transaction {
+			times as math(1)
+					product  {
+						~product  {
+							product {
+							ocurr as math(times)
+								product_ids as id
+							name 
+							}
+						}
+					}
+				}
+		}
+	
+		var(func: eq(id, $id)) {
+			transaction {
+				product {
+					user_products as id
+				}
+			}
+		}
+	
+		recommendations(func: uid(product_ids), orderdesc: val(ocurr), first:10) 
+		@filter(NOT uid(user_products)) {
+			name
+			price
+		}
+	}`
+)
