@@ -91,4 +91,13 @@ const (
 		}
 	}
 	`
+
+	// GetDate gets a date from the DB
+	GetDate = `
+	query GetDate($date: string) {
+		date(func: eq(date, $date)) {
+			date
+		}
+	}
+	`
 )

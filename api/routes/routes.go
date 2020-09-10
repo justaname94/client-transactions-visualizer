@@ -2,6 +2,7 @@ package routes
 
 import (
 	"encoding/json"
+	"errors"
 	"log"
 	"net/http"
 	"time"
@@ -54,6 +55,20 @@ func (rs *TransactionRs) loadData(w http.ResponseWriter, r *http.Request) {
 
 	if err != nil {
 		render.Render(w, r, responses.NewErrResponse(400, err))
+		return
+	}
+
+	// Cannot load the same date twice
+	dateDB, err := storage.Query(rs.Db, storage.GetDate, map[string]string{
+		"$date": dateParam,
+	})
+	if err != nil {
+		render.Render(w, r, responses.NewErrResponse(500, err))
+		return
+	}
+	if dateDB.GetMetrics().GetNumUids()["_total"] > 0 {
+		render.Render(w, r, responses.NewErrResponse(403,
+			errors.New("cannot load same date twice")))
 		return
 	}
 
