@@ -5,6 +5,7 @@ import (
 	"errors"
 	"log"
 	"net/http"
+	"strconv"
 	"time"
 	"transactions/api/handlers"
 	messages "transactions/shared/error-messages"
@@ -105,7 +106,29 @@ func (rs *TransactionRs) loadData(w http.ResponseWriter, r *http.Request) {
 }
 
 func (rs TransactionRs) getCustomers(w http.ResponseWriter, r *http.Request) {
-	buyers, err := storage.Query(rs.Db, storage.AllBuyers, map[string]string{})
+	limit := 10
+	page := 0
+
+	limitParam := r.URL.Query().Get("limit")
+	pageParam := r.URL.Query().Get("page")
+
+	if limitParam != "" {
+		if intVal, err := strconv.Atoi(limitParam); err == nil {
+			limit = intVal
+		}
+	}
+
+	if pageParam != "" {
+		if intVal, err := strconv.Atoi(pageParam); err == nil {
+			page = (page - 1 + intVal) * limit
+		}
+	}
+
+	buyers, err := storage.Query(rs.Db, storage.AllBuyersPaginated,
+		map[string]string{
+			"$limit": strconv.Itoa(limit),
+			"$page":  strconv.Itoa(page),
+		})
 
 	if err != nil {
 		render.Render(w, r, responses.NewErrResponse(500, err))

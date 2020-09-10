@@ -81,6 +81,17 @@ const (
 		}
 	`
 
+	// AllBuyersPaginated return all the buyers on the database paginated
+	AllBuyersPaginated = `
+		query AllBuyersPaginated($page: int, $limit: int) {
+			buyers(func: type(Buyer), offset: $page, first: $limit) {
+				id
+				name
+				age
+			}
+		}
+	`
+
 	// AllProducts return all the products on the database.
 	AllProducts = `
 	query AllProducts{
