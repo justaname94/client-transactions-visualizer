@@ -74,6 +74,7 @@ func loadBuyers(date time.Time) ([]*buyer.Buyer, error) {
 	}
 
 	var buyers []*buyer.Buyer
+	exists := make(map[string]bool)
 
 	switch v := buyersInterface.(type) {
 	case []interface{}:
@@ -82,12 +83,20 @@ func loadBuyers(date time.Time) ([]*buyer.Buyer, error) {
 			name := data.(map[string]interface{})["name"].(string)
 			age := int(data.(map[string]interface{})["age"].(float64))
 
-			newBuyer, err := buyer.NewBuyer(id, name, age)
+			buyer, err := buyer.NewBuyer(id, name, age)
 			if err != nil {
 				// Log and ignore incomplete buyers
 				log.Println(err)
 			}
-			buyers = append(buyers, newBuyer)
+
+			// Filter duplicates
+			if _, exist := exists[buyer.ID]; exist {
+				continue
+			} else {
+				exists[buyer.ID] = true
+			}
+
+			buyers = append(buyers, buyer)
 		}
 	default:
 		return nil, errors.New("an error ocurred obtaining data from the endpoint")
@@ -143,7 +152,7 @@ func loadProducts(date time.Time) ([]*product.Product, error) {
 			log.Println(err)
 		}
 
-		// Sometimes the parser outputs duplicates, check for them
+		// Filter duplicates
 		if _, exist := exists[product.ID]; exist {
 			continue
 		} else {

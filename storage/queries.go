@@ -80,4 +80,15 @@ const (
 			}
 		}
 	`
+
+	// AllProducts return all the products on the database.
+	AllProducts = `
+	query AllProducts{
+		products(func: type(Product)) {
+			id
+			name
+			price
+		}
+	}
+	`
 )
