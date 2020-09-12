@@ -1,0 +1,23 @@
+{
+  "name": "transactions-visualizer",
+  "version": "1.0.0",
+  "description": "A GUI for the client-transactions visualizer",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/justaname94/client-transactions-visualizer.git"
+  },
+  "keywords": [
+    "clients",
+    "vue"
+  ],
+  "author": "Roniel Valdez",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/justaname94/client-transactions-visualizer/issues"
+  },
+  "homepage": "https://github.com/justaname94/client-transactions-visualizer#readme"
+}
