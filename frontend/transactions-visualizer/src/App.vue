@@ -13,19 +13,46 @@
       </div>
     </v-app-bar>
     <v-main>
-      <calendar-overlay :modal="modal" v-on:update:modal="updateModal" />
+      <template>
+        <calendar-overlay :modal="modal" v-on:update:modal="updateModal" />
+        <v-tabs>
+          <v-tab>All Clients</v-tab>
+          <v-tab>Client info</v-tab>
+          <v-tab-item>
+            <v-container>
+              <all-clients-tab />
+            </v-container>
+          </v-tab-item>
+          <v-tab-item>
+            <v-container>
+              <client-tab />
+            </v-container>
+          </v-tab-item>
+        </v-tabs>
+      </template>
     </v-main>
+    <v-card height="100">
+      <v-footer dark tile absolute class="font-weight-medium">
+        <v-col class="text-center" cols="12">
+          <strong>2020 - Roniel Valdez</strong>
+        </v-col>
+      </v-footer>
+    </v-card>
   </v-app>
 </template>
 
 <script>
-import CalendarOverlay from "./components/CalendarOverlay";
+import CalendarOverlay from "@/components/CalendarOverlay";
+import AllClientsTab from "@/components/AllClientsTab";
+import ClientTab from "@/components/ClientTab";
 
 export default {
   name: "App",
 
   components: {
-    CalendarOverlay
+    CalendarOverlay,
+    AllClientsTab,
+    ClientTab
   },
 
   data: () => ({

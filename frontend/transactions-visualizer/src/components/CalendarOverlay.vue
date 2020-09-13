@@ -6,7 +6,13 @@
       <strong>type</strong> of error
     </v-alert>
     <v-dialog dark max-width="290px" persistent v-model="computedModal">
-      <v-date-picker v-model="date" scrollable flat actions>
+      <v-date-picker
+        v-model="date"
+        scrollable
+        flat
+        actions
+        :max="new Date().toISOString().substr(0, 10)"
+      >
         <v-card-actions>
           <v-spacer></v-spacer>
           <v-btn text color="primary" @click="computedModal = !computedModal">Cancel</v-btn>
@@ -65,3 +71,9 @@ export default {
   }
 };
 </script>
+
+<style scoped>
+.v-alert {
+  margin-bottom: 0;
+}
+</style>
