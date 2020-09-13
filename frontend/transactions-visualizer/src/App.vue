@@ -14,6 +14,7 @@
     </v-app-bar>
     <v-main>
       <template>
+        <custom-alert />
         <calendar-overlay :modal="modal" v-on:update:modal="updateModal" />
         <v-tabs>
           <v-tab>All Clients</v-tab>
@@ -45,6 +46,7 @@
 import CalendarOverlay from "@/components/CalendarOverlay";
 import AllClientsTab from "@/components/AllClientsTab";
 import ClientTab from "@/components/ClientTab";
+import CustomAlert from "@/components/CustomAlert";
 
 export default {
   name: "App",
@@ -52,7 +54,8 @@ export default {
   components: {
     CalendarOverlay,
     AllClientsTab,
-    ClientTab
+    ClientTab,
+    CustomAlert
   },
 
   data: () => ({

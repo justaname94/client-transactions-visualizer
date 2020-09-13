@@ -1,10 +1,10 @@
 <template>
   <div>
-    <v-alert v-model="alert" dense tile dismissible type="error">
+    <!-- <v-alert v-model="alert" dense tile dismissible type="error">
       I'm a dense alert with the
       <strong>outlined</strong> prop and a
       <strong>type</strong> of error
-    </v-alert>
+    </v-alert>-->
     <v-dialog dark max-width="290px" persistent v-model="computedModal">
       <v-date-picker
         v-model="date"
@@ -32,6 +32,8 @@
 </template>
 
 <script>
+import EventBus from "../event-bus";
+
 export default {
   name: "CalendarOverlay",
 
@@ -54,8 +56,13 @@ export default {
       val &&
         setTimeout(() => {
           this.loadingOverlay = false;
-          this.alert = true;
-        }, 3000);
+          EventBus.$emit("alert", {
+            alert: true,
+            type: "error",
+            message: "calendar error"
+          });
+          console.log("emmited");
+        }, 1000);
     }
   },
 
