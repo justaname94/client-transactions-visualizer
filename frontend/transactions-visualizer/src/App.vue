@@ -1,81 +1,44 @@
 <template>
   <v-app>
     <v-app-bar dense app flat dark>
+      <v-toolbar-title>Client transactions visualizer</v-toolbar-title>
+
       <v-spacer></v-spacer>
 
       <div class="calendar">
-        <v-btn target="_blank" @click="calendarModal = !calendarModal" text>
+        <v-btn target="_blank" @click="modal = !modal" text>
           <span class="mr-2">Load Date</span>
           <v-icon>mdi-calendar</v-icon>
         </v-btn>
       </div>
     </v-app-bar>
     <v-main>
-      <div>
-        <v-alert :value="alert" dense dismissible type="error">
-          I'm a dense alert with the <strong>outlined</strong> prop and a
-          <strong>type</strong> of error
-        </v-alert>
-        <v-dialog dark max-width="290px" persistent v-model="calendarModal">
-          <v-date-picker v-model="date" scrollable flat actions>
-            <v-card-actions>
-              <v-spacer></v-spacer>
-              <v-btn
-                text
-                color="primary"
-                @click="calendarModal = !calendarModal"
-                >Cancel</v-btn
-              >
-              <v-btn
-                @click="loadingOverlay = !loadingOverlay"
-                :disabled="date === null"
-                text
-                color="primary"
-                >OK</v-btn
-              >
-            </v-card-actions>
-          </v-date-picker>
-        </v-dialog>
-        <v-overlay :value="loadingOverlay">
-          <v-progress-circular indeterminate size="64"></v-progress-circular>
-        </v-overlay>
-      </div>
+      <calendar-overlay :modal="modal" v-on:update:modal="updateModal" />
     </v-main>
   </v-app>
 </template>
 
 <script>
-// import HelloWorld from "./components/HelloWorld";
+import CalendarOverlay from "./components/CalendarOverlay";
 
 export default {
   name: "App",
 
   components: {
-    // HelloWorld,
+    CalendarOverlay
   },
 
   data: () => ({
-    calendarModal: false,
-    loadingOverlay: false,
-    alert: false,
-    date: null,
+    modal: false
   }),
 
   methods: {
     loadDate() {
       this.loadingOverlay = true;
     },
-  },
-
-  watch: {
-    loadingOverlay(val) {
-      this.calendarModal = false;
-      val &&
-        setTimeout(() => {
-          this.loadingOverlay = false;
-          this.alert = true;
-        }, 3000);
-    },
-  },
+    updateModal(value) {
+      this.modal = value;
+    }
+  }
 };
 </script>
