@@ -1,6 +1,6 @@
 <template>
   <div>
-    <h2>{{name}} {{age}}</h2>
+    <h2>{{ name }} {{ age }}</h2>
     <v-divider class="my-4"></v-divider>
     <h2 class="mb-3">Transactions</h2>
 
@@ -17,7 +17,7 @@
         <v-icon left>mdi-ip-network</v-icon>99.65.7.60
       </v-chip>
 
-      <v-chip class="ma-2" color="green" text-color="white">
+      <v-chip class="ma-2 px-4" color="green" text-color="white">
         <v-icon left>mdi-currency-usd</v-icon>248.5
       </v-chip>
     </div>
@@ -33,7 +33,7 @@
         <tbody>
           <tr v-for="p in product" :key="p.name">
             <td>{{ p.name }}</td>
-            <td>{{ p.price *0.01 }}</td>
+            <td>{{ p.price * 0.01 }}</td>
           </tr>
         </tbody>
       </template>
@@ -51,7 +51,7 @@
         <v-icon left>mdi-ip-network</v-icon>99.65.7.60
       </v-chip>
 
-      <v-chip class="ma-2" color="green" text-color="white">
+      <v-chip class="ma-2 px-4" color="green" text-color="white">
         <v-icon left>mdi-currency-usd</v-icon>248.5
       </v-chip>
     </div>
@@ -67,7 +67,7 @@
         <tbody>
           <tr v-for="p in product" :key="p.name">
             <td>{{ p.name }}</td>
-            <td>{{ p.price *0.01 }}</td>
+            <td>{{ p.price * 0.01 }}</td>
           </tr>
         </tbody>
       </template>

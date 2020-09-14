@@ -43,7 +43,7 @@ export default {
     buyers: [],
     hasMore: true,
     page: 1,
-    loading: false,
+    loading: false
   }),
 
   methods: {
@@ -65,11 +65,11 @@ export default {
       // else {
 
       // }
-    },
+    }
   },
 
   mounted() {
     this.loadBuyers();
-  },
+  }
 };
 </script>
