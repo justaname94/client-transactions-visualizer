@@ -35,6 +35,23 @@ class EndpointsService {
       };
     }
   }
+
+  async getBuyer(buyerID) {
+    try {
+      const URL = `${this._baseURL}customers/${buyerID}`;
+      const { data, status } = await axios.get(URL);
+
+      const filtered = { ...data, buyer: data.buyer[0] };
+
+      return { data: filtered, success: true, status };
+    } catch ({ response: { data, status } }) {
+      return {
+        data: data.message,
+        success: false,
+        status
+      };
+    }
+  }
 }
 
 export default new EndpointsService();
