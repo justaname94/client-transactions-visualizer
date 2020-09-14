@@ -23,7 +23,7 @@
     <div class="text-center">
       <v-btn
         class="ma-5"
-        dark
+        :dark="hasMore"
         :loading="loading"
         :disabled="!hasMore"
         @click="loadBuyers"
@@ -60,9 +60,7 @@ export default {
         this.buyers = this.buyers.concat(data);
         this.page = this.page + 1;
         this.hasMore = data.length >= PAGE_LIMIT;
-      }
-      // TODO: Check for error
-      else {
+      } else {
         EventBus.$emit("alert", {
           alert: true,
           type: "error",

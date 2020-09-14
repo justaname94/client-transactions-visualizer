@@ -31,7 +31,6 @@ export default {
      */
 
     EventBus.$on("alert", payload => {
-      console.log("reached");
       this.alert = payload.alert;
       this.type = payload.type;
       this.message = Capitalize(payload.message);
