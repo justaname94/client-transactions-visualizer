@@ -27,7 +27,8 @@
         :loading="loading"
         :disabled="!hasMore"
         @click="loadBuyers"
-      >Load more</v-btn>
+        >Load more</v-btn
+      >
     </div>
   </div>
 </template>
@@ -55,17 +56,18 @@ export default {
       );
       this.loading = false;
 
-      if (success) {
-        this.buyers = this.buyers.concat(data);
-        this.page = this.page + 1;
-        this.hasMore = data.length >= PAGE_LIMIT;
-      } else {
+      if (!success) {
         EventBus.$emit("alert", {
           alert: true,
           type: "error",
           message: data
         });
+        return;
       }
+
+      this.buyers = this.buyers.concat(data);
+      this.page = data.length > 0 ? this.page + 1 : this.page;
+      this.hasMore = data.length >= PAGE_LIMIT;
     }
   },
 

@@ -11,7 +11,8 @@
         </v-chip>
 
         <v-chip class="ma-2 px-4" color="secondary">
-          <v-icon left>mdi-cellphone-link</v-icon>{{ transaction.device }}
+          <v-icon left>mdi-cellphone-link</v-icon
+          >{{ capitalize(transaction.device) }}
         </v-chip>
 
         <v-chip class="ma-2 px-4" color="red" text-color="white">
@@ -86,6 +87,8 @@
 </template>
 
 <script>
+import Capitalize from "lodash.capitalize";
+
 export default {
   props: {
     client: {
@@ -97,6 +100,10 @@ export default {
   methods: {
     toDollars(cents) {
       return parseFloat(cents * 0.01).toFixed(2);
+    },
+
+    capitalize(str) {
+      return Capitalize(str);
     }
   }
 };
