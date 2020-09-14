@@ -35,6 +35,7 @@
 
 <script>
 import Endpoints from "../services/EndpointsService";
+import EventBus from "../event-bus";
 
 const PAGE_LIMIT = 12;
 
@@ -59,12 +60,15 @@ export default {
         this.buyers = this.buyers.concat(data);
         this.page = this.page + 1;
         this.hasMore = data.length >= PAGE_LIMIT;
-        console.log("hello", data);
       }
       // TODO: Check for error
-      // else {
-
-      // }
+      else {
+        EventBus.$emit("alert", {
+          alert: true,
+          type: "error",
+          message: data
+        });
+      }
     }
   },
 

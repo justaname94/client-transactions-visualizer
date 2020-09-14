@@ -1,10 +1,5 @@
 <template>
   <div>
-    <!-- <v-alert v-model="alert" dense tile dismissible type="error">
-      I'm a dense alert with the
-      <strong>outlined</strong> prop and a
-      <strong>type</strong> of error
-    </v-alert>-->
     <v-dialog dark max-width="290px" persistent v-model="computedModal">
       <v-date-picker
         v-model="date"
@@ -15,13 +10,16 @@
       >
         <v-card-actions>
           <v-spacer></v-spacer>
-          <v-btn text color="primary" @click="computedModal = !computedModal">Cancel</v-btn>
+          <v-btn text color="primary" @click="computedModal = !computedModal"
+            >Cancel</v-btn
+          >
           <v-btn
-            @click="loadingOverlay = !loadingOverlay"
+            @click="loadDate"
             :disabled="date === null"
             text
             color="primary"
-          >OK</v-btn>
+            >Load</v-btn
+          >
         </v-card-actions>
       </v-date-picker>
     </v-dialog>
@@ -33,6 +31,7 @@
 
 <script>
 import EventBus from "../event-bus";
+import Endpoints from "../services/EndpointsService";
 
 export default {
   name: "CalendarOverlay",
@@ -50,19 +49,30 @@ export default {
     date: null
   }),
 
-  watch: {
-    loadingOverlay(val) {
+  methods: {
+    async loadDate() {
       this.computedModal = false;
-      val &&
-        setTimeout(() => {
-          this.loadingOverlay = false;
-          EventBus.$emit("alert", {
-            alert: true,
-            type: "error",
-            message: "calendar error"
-          });
-          console.log("emmited");
-        }, 1000);
+      this.loadingOverlay = true;
+      const { data, success } = await Endpoints.loadDate(this.date);
+      this.loadingOverlay = false;
+
+      let payload;
+
+      if (success) {
+        payload = {
+          alert: true,
+          type: "success",
+          message: "Date successfully loaded"
+        };
+      } else {
+        payload = {
+          alert: true,
+          type: "error",
+          message: data
+        };
+      }
+
+      EventBus.$emit("alert", payload);
     }
   },
 

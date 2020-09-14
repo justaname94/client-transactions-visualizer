@@ -11,12 +11,27 @@ class EndpointsService {
       const URL = `${this._baseURL}customers?page=${page}&limit=${limit}`;
       const { data, status } = await axios.get(URL);
 
-      return { data: data.buyers, status, success: true };
-    } catch (err) {
+      return { data: data.buyers, success: true, status };
+    } catch ({ response: { data, status } }) {
       return {
-        data: err.response.data,
-        status: err.response.status,
+        data: data.message,
         success: false,
+        status
+      };
+    }
+  }
+
+  async loadDate(date) {
+    try {
+      const URL = `${this._baseURL}load/${date}`;
+      const { data, status } = await axios.get(URL);
+
+      return { data: data.success, success: true, status };
+    } catch ({ response: { data, status } }) {
+      return {
+        data: status === 500 ? "An unexpected error ocurred" : data.message,
+        success: false,
+        status
       };
     }
   }

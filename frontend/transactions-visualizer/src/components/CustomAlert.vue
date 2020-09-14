@@ -1,10 +1,18 @@
 <template>
-  <v-alert v-model="alert" dense tile dismissible :type="type">{{message}}</v-alert>
+  <v-alert
+    transition="scale-transition"
+    v-model="alert"
+    dense
+    tile
+    dismissible
+    :type="type"
+    >{{ message }}</v-alert
+  >
 </template>
-
 
 <script>
 import EventBus from "../event-bus";
+import Capitalize from "lodash.capitalize";
 
 export default {
   data: () => ({
@@ -26,7 +34,7 @@ export default {
       console.log("reached");
       this.alert = payload.alert;
       this.type = payload.type;
-      this.message = payload.message;
+      this.message = Capitalize(payload.message);
     });
   }
 };
