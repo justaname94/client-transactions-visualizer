@@ -1,10 +1,10 @@
 <template>
   <div>
-    <h2>{{ client.buyer.name }} {{ client.buyer.age }}</h2>
+    <h2>{{ client.info.name }} {{ client.info.age }}</h2>
     <v-divider class="my-4"></v-divider>
     <h2 class="mb-3">Transactions</h2>
 
-    <div v-for="transaction in client.buyer.transaction" :key="transaction.id">
+    <div v-for="transaction in client.info.transactions" :key="transaction.id">
       <div class="text-left">
         <v-chip class="ma-2 px-4" color="primary">
           <v-icon left>mdi-identifier</v-icon>{{ transaction.id }}
@@ -34,7 +34,7 @@
             </tr>
           </thead>
           <tbody>
-            <tr v-for="p in transaction.product" :key="p.name">
+            <tr v-for="p in transaction.products" :key="p.name">
               <td>{{ p.name }}</td>
               <td>{{ toDollars(p.price) }}</td>
             </tr>

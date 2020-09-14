@@ -13,16 +13,16 @@ const (
 	// items where bought the most along with 'pizza' and all the other products
 	// in the buyer transactions. (and now I want pizza)
 	BuyerInfo = `query UserInfo($id: string) {
-		buyer(func: eq(id, $id)) {
+		info(func: eq(id, $id)) {
 			name
 			age
 			id
 			
-			transaction {
+			transactions : transaction {
 				id
 				device
 				ip as ip
-				product {
+				products : product {
 					name
 					price as price
 				}

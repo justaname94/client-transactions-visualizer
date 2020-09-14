@@ -11,7 +11,7 @@ class EndpointsService {
 
   async getBuyers(page = 1, limit = 15) {
     try {
-      const URL = `${this._baseURL}customers?page=${page}&limit=${limit}`;
+      const URL = `${this._baseURL}buyer?page=${page}&limit=${limit}`;
       const { data, status } = await axios.get(URL);
 
       return { data: data.buyers, success: true, status };
@@ -41,10 +41,10 @@ class EndpointsService {
 
   async getBuyer(buyerID) {
     try {
-      const URL = `${this._baseURL}customers/${buyerID}`;
+      const URL = `${this._baseURL}buyer/${buyerID}`;
       const { data, status } = await axios.get(URL);
 
-      const filtered = { ...data, buyer: data.buyer[0] };
+      const filtered = { ...data, info: data.info[0] };
 
       return { data: filtered, success: true, status };
     } catch ({ response: { data, status } }) {

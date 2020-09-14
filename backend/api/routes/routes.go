@@ -39,8 +39,8 @@ func (rs TransactionRs) Routes() chi.Router {
 
 	router.Get("/load", rs.loadData)
 	router.Get("/load/{date}", rs.loadData)
-	router.Get("/customers", rs.getCustomers)
-	router.Get("/customers/{id}", rs.getCustomer)
+	router.Get("/buyer", rs.getBuyers)
+	router.Get("/buyer/{id}", rs.getBuyer)
 
 	return router
 }
@@ -105,7 +105,7 @@ func (rs *TransactionRs) loadData(w http.ResponseWriter, r *http.Request) {
 	})
 }
 
-func (rs TransactionRs) getCustomers(w http.ResponseWriter, r *http.Request) {
+func (rs TransactionRs) getBuyers(w http.ResponseWriter, r *http.Request) {
 	limit := 10
 	page := 0
 
@@ -144,7 +144,7 @@ func (rs TransactionRs) getCustomers(w http.ResponseWriter, r *http.Request) {
 	render.JSON(w, r, res)
 }
 
-func (rs *TransactionRs) getCustomer(w http.ResponseWriter, r *http.Request) {
+func (rs *TransactionRs) getBuyer(w http.ResponseWriter, r *http.Request) {
 	id := chi.URLParam(r, "id")
 
 	info, err := storage.Query(rs.Db, storage.BuyerInfo, map[string]string{
