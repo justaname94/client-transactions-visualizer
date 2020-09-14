@@ -11,7 +11,7 @@
           </tr>
         </thead>
         <tbody>
-          <tr v-for="item in desserts" :key="item.name">
+          <tr v-for="item in buyers" :key="item.name">
             <td>{{ item.name }}</td>
             <td>{{ item.age }}</td>
             <td>{{ item.id }}</td>
@@ -21,68 +21,55 @@
     </v-simple-table>
 
     <div class="text-center">
-      <v-btn class="ma-5" dark>Load more</v-btn>
+      <v-btn
+        class="ma-5"
+        dark
+        :loading="loading"
+        :disabled="!hasMore"
+        @click="loadBuyers"
+        >Load more</v-btn
+      >
     </div>
   </div>
 </template>
 
 <script>
+import Endpoints from "../services/EndpointsService";
+
+const PAGE_LIMIT = 12;
+
 export default {
-  data() {
-    return {
-      desserts: [
-        {
-          id: "aaf0f8ab",
-          name: "Rella",
-          age: 65
-        },
-        {
-          id: "e612df58",
-          name: "Ermentrude",
-          age: 30
-        },
-        {
-          id: "1be7fe04",
-          name: "McDermott",
-          age: 62
-        },
-        {
-          id: "1c8ecf7c",
-          name: "Dolora",
-          age: 62
-        },
-        {
-          id: "83e45e62",
-          name: "Mayfield",
-          age: 62
-        },
-        {
-          id: "64534d5e",
-          name: "Hardie",
-          age: 40
-        },
-        {
-          id: "cd6a86b3",
-          name: "Paul",
-          age: 35
-        },
-        {
-          id: "591408e5",
-          name: "Elurd",
-          age: 77
-        },
-        {
-          id: "72978269",
-          name: "Idel",
-          age: 21
-        },
-        {
-          id: "b119e66e",
-          name: "Kissel",
-          age: 48
-        }
-      ]
-    };
-  }
+  data: () => ({
+    buyers: [],
+    hasMore: true,
+    page: 1,
+    loading: false,
+  }),
+
+  methods: {
+    async loadBuyers() {
+      this.loading = true;
+      const { data, success } = await Endpoints.getBuyers(
+        this.page,
+        PAGE_LIMIT
+      );
+      this.loading = false;
+
+      if (success) {
+        this.buyers = this.buyers.concat(data);
+        this.page = this.page + 1;
+        this.hasMore = data.length >= PAGE_LIMIT;
+        console.log("hello", data);
+      }
+      // TODO: Check for error
+      // else {
+
+      // }
+    },
+  },
+
+  mounted() {
+    this.loadBuyers();
+  },
 };
 </script>
