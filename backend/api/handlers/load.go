@@ -18,9 +18,15 @@ import (
 	"transactions/shared/utils"
 )
 
+const (
+	clientTimeout    = 3
+	retriesAmount    = 3
+	minSleepSeconsds = 1
+)
+
 var (
 	client = http.Client{
-		Timeout: time.Second * 5,
+		Timeout: time.Second * clientTimeout,
 	}
 )
 
@@ -49,7 +55,10 @@ func Load(date time.Time) (utils.Entities, error) {
 		return utils.Entities{}, err
 	}
 
-	return utils.Entities{Buyers: buyers, Products: products, Transactions: transactions}, nil
+	return utils.Entities{
+		Buyers:       buyers,
+		Products:     products,
+		Transactions: transactions}, nil
 }
 
 // loadBuyers fetch all the buyers data and loads it into memory
@@ -61,7 +70,7 @@ func loadBuyers(date time.Time) ([]*buyer.Buyer, error) {
 		return nil, err
 	}
 
-	res, err := client.Do(req)
+	res, err := utils.RetryRequest(client, retriesAmount, minSleepSeconsds, req)
 	if err != nil {
 		return nil, err
 	}
@@ -114,7 +123,7 @@ func loadProducts(date time.Time) ([]*product.Product, error) {
 		return nil, err
 	}
 
-	res, err := client.Do(req)
+	res, err := utils.RetryRequest(client, retriesAmount, minSleepSeconsds, req)
 	if err != nil {
 		return nil, err
 	}
@@ -179,7 +188,7 @@ func loadTransactions(date time.Time) ([]*transaction.Transaction, error) {
 		return nil, err
 	}
 
-	res, err := client.Do(req)
+	res, err := utils.RetryRequest(client, retriesAmount, minSleepSeconsds, req)
 	if err != nil {
 		return nil, err
 	}
