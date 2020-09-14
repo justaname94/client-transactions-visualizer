@@ -27,8 +27,7 @@
         :loading="loading"
         :disabled="!hasMore"
         @click="loadBuyers"
-        >Load more</v-btn
-      >
+      >Load more</v-btn>
     </div>
   </div>
 </template>
@@ -37,7 +36,7 @@
 import Endpoints from "../services/EndpointsService";
 import EventBus from "../event-bus";
 
-const PAGE_LIMIT = 12;
+const PAGE_LIMIT = 10;
 
 export default {
   data: () => ({

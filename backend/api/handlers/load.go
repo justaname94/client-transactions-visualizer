@@ -145,6 +145,13 @@ func loadProducts(date time.Time) ([]*product.Product, error) {
 
 		price, _ := strconv.Atoi(record[2])
 
+		fmt.Println(id, name, price)
+
+		// Sometimes item names come blank, assign default name
+		if name == "" {
+			name = "N/A"
+		}
+
 		product, err := product.NewProduct(id, name, price)
 
 		if err != nil {
